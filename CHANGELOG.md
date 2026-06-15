@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-06-15
+
+### Added
+
+- **App name color scheme** — "Pix3lNote" in the header now uses the shared Pix3lTools brand colors: "3" in red (`#ef4444`), "l" in blue (`#3b82f6`), matching Pix3lBoard and Pix3lWiki
+- **Version badge** — version number displayed next to the app name in the header
+
+### Changed
+
+- Version promoted from 0.1.0 to 1.0.0 — first stable release
+
+---
+
 ## [0.1.0] - 2026-06-15
 
 ### Added

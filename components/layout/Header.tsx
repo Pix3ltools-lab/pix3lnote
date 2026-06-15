@@ -30,7 +30,10 @@ export function Header() {
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
         </svg>
-        <span className="hidden sm:block">Pix3lnote</span>
+        <span className="hidden sm:block">
+          Pix<span style={{ color: '#ef4444' }}>3</span><span style={{ color: '#3b82f6' }}>l</span>Note
+        </span>
+        <span className="hidden sm:block text-xs font-normal text-gray-500 dark:text-gray-400">v1.0.0</span>
       </button>
 
       {/* Search */}
