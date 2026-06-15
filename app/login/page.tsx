@@ -37,23 +37,23 @@ export default function LoginPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center dark:bg-gray-900">
-        <p className="text-gray-500 dark:text-gray-400">Loading...</p>
+      <div className="flex h-screen items-center justify-center dark:bg-neutral-900">
+        <p className="text-gray-500 dark:text-neutral-400">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-50 px-4 dark:bg-gray-950">
-      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div className="flex h-screen items-center justify-center bg-gray-50 px-4 dark:bg-neutral-950">
+      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-sm border border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Pix3lnote</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Sign in to your notes</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Pix3lnote</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">Sign in to your notes</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1 dark:text-neutral-300">
               Email
             </label>
             <input
@@ -64,12 +64,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 disabled:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-violet-400 dark:disabled:bg-gray-600"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 disabled:bg-gray-50 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-400 dark:disabled:bg-neutral-600"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1 dark:text-neutral-300">
               Password
             </label>
             <input
@@ -80,7 +80,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 disabled:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-violet-400 dark:disabled:bg-gray-600"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 disabled:bg-gray-50 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-500 dark:focus:border-violet-400 dark:disabled:bg-neutral-600"
             />
           </div>
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
 
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-center text-sm text-gray-500 dark:text-neutral-400">
             No account?{' '}
             <Link href="/register" className="text-violet-600 hover:underline dark:text-violet-400">
               Register

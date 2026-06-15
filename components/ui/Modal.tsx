@@ -27,7 +27,7 @@ export function Modal({ isOpen, onClose, children, maxWidth = 'max-w-lg' }: Moda
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
-      <div className={`w-full ${maxWidth} rounded-2xl bg-white shadow-xl dark:bg-gray-800`}>
+      <div className={`w-full ${maxWidth} rounded-2xl bg-white shadow-xl dark:bg-neutral-800`}>
         {children}
       </div>
     </div>

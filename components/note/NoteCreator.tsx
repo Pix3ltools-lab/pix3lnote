@@ -77,7 +77,7 @@ export function NoteCreator() {
       {expanded && (
         <>
           {showColorPicker && (
-            <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+            <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
               <ColorPicker current={color} onChange={(c) => { setColor(c); setShowColorPicker(false); }} />
             </div>
           )}
@@ -85,7 +85,7 @@ export function NoteCreator() {
             <button
               onClick={() => setShowColorPicker(p => !p)}
               title="Change color"
-              className="rounded-full p-1.5 text-gray-500 hover:bg-black/8 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="rounded-full p-1.5 text-gray-500 hover:bg-black/8 hover:text-gray-700 dark:text-neutral-400 dark:hover:text-neutral-200"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"/>
@@ -94,7 +94,7 @@ export function NoteCreator() {
             </button>
             <button
               onClick={handleSave}
-              className="rounded-lg px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-black/5 dark:text-gray-300"
+              className="rounded-lg px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-black/5 dark:text-neutral-300"
             >
               Close
             </button>

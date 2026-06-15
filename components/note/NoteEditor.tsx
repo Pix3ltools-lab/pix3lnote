@@ -130,23 +130,23 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
         )}
 
         {showColorPicker && (
-          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
             <ColorPicker current={color} onChange={handleColorChange} />
           </div>
         )}
 
         {showLabelPicker && labels.length > 0 && (
-          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg p-2 max-h-40 overflow-y-auto dark:border-gray-700 dark:bg-gray-800">
+          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg p-2 max-h-40 overflow-y-auto dark:border-neutral-700 dark:bg-neutral-800">
             {labels.map(label => {
               const active = noteLabels.find(l => l.id === label.id);
               return (
                 <button
                   key={label.id}
                   onClick={() => handleLabelToggle(label.id)}
-                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-neutral-700"
                 >
                   <span className="h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: label.color }} />
-                  <span className="flex-1 text-left text-gray-700 dark:text-gray-300">{label.name}</span>
+                  <span className="flex-1 text-left text-gray-700 dark:text-neutral-300">{label.name}</span>
                   {active && <span className="text-violet-600 dark:text-violet-400">✓</span>}
                 </button>
               );

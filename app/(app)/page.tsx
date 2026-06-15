@@ -22,7 +22,7 @@ export default function HomePage() {
   if (searchResults !== null) {
     return (
       <div>
-        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mb-4 text-sm text-gray-500 dark:text-neutral-400">
           {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for &ldquo;{searchQuery}&rdquo;
         </p>
         <NoteGrid notes={searchResults} emptyMessage="No notes match your search." />
