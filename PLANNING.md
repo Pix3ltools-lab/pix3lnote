@@ -26,7 +26,7 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 |------|-------|
 | 1 — Setup progetto | ✅ Completata |
 | 2 — Database | ✅ Completata |
-| 3 — Autenticazione | ⬜ Da fare |
+| 3 — Autenticazione | ✅ Completata |
 | 4 — API Notes | ⬜ Da fare |
 | 5 — UI | ⬜ Da fare |
 | 6 — Test E2E | ⬜ Da fare |
@@ -63,17 +63,17 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 
 Copiare e adattare il pattern da pix3lboard/pix3lwiki:
 
-- [ ] `lib/auth/auth.ts` — JWT helpers, register, login, getUserById
-- [ ] `lib/auth/validation.ts` — rate limiting, getClientIp
-- [ ] `app/api/auth/login/route.ts`
-- [ ] `app/api/auth/logout/route.ts`
-- [ ] `app/api/auth/me/route.ts`
-- [ ] `app/api/auth/refresh/route.ts`
-- [ ] `app/api/auth/register/route.ts`
-- [ ] `middleware.ts` — protezione route + nonce CSP
-- [ ] `lib/context/AuthContext.tsx` — stato utente lato client
-- [ ] Pagina `/login` e `/register`
-- [ ] Pagina admin per approvazione utenti (`/admin`)
+- [x] `lib/auth/auth.ts` — JWT helpers, register, login, getUserById, admin functions
+- [x] `lib/auth/validation.ts` — rate limiting email + IP, getClientIp
+- [x] `app/api/auth/login/route.ts`
+- [x] `app/api/auth/logout/route.ts`
+- [x] `app/api/auth/me/route.ts`
+- [x] `app/api/auth/refresh/route.ts`
+- [x] `app/api/auth/register/route.ts`
+- [x] `middleware.ts` — nonce CSP per tutte le route
+- [x] `lib/context/AuthContext.tsx` — stato utente lato client
+- [x] Pagina `/login` e `/register`
+- [x] Pagina admin per approvazione utenti (`/admin`)
 
 ### Fase 4 — API Notes (backend)
 
