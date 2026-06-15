@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import localFont from 'next/font/local';
 import './globals.css';
 import { AuthProvider } from '@/lib/context/AuthContext';
+import { ThemeProvider } from '@/lib/context/ThemeContext';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -30,8 +31,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: '' }} />
-        <AuthProvider>{children}</AuthProvider>
+        {/* Prevent flash of wrong theme before React hydration */}
+        <script nonce={nonce} dangerouslySetInnerHTML={{
+          __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+        }} />
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

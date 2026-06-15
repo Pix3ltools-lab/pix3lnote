@@ -25,8 +25,7 @@ export function Sidebar() {
   };
 
   return (
-    <nav className="flex w-14 flex-col items-center gap-1 border-r border-gray-100 bg-white px-2 py-3 sm:w-52 sm:items-start sm:px-3">
-      {/* Notes */}
+    <nav className="flex w-14 flex-col items-center gap-1 border-r border-gray-100 bg-white px-2 py-3 sm:w-52 sm:items-start sm:px-3 dark:border-gray-700 dark:bg-gray-900">
       <NavItem
         icon={
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill={isHome ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
@@ -39,7 +38,6 @@ export function Sidebar() {
         onClick={() => router.push('/')}
       />
 
-      {/* Archive */}
       <NavItem
         icon={
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -53,7 +51,6 @@ export function Sidebar() {
         onClick={() => router.push('/archive')}
       />
 
-      {/* Labels section */}
       {labels.length > 0 && (
         <div className="mt-3 w-full">
           <p className="hidden sm:block px-3 mb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -65,19 +62,16 @@ export function Sidebar() {
                 onClick={() => router.push(`/?label=${label.id}`)}
                 className={`flex flex-1 items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors ${
                   activeLabel === label.id
-                    ? 'bg-yellow-50 font-medium text-gray-900'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-yellow-50 font-medium text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100'
                 }`}
               >
-                <span
-                  className="h-3 w-3 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: label.color }}
-                />
+                <span className="h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: label.color }} />
                 <span className="hidden sm:block truncate">{label.name}</span>
               </button>
               <button
                 onClick={() => deleteLabel(label.id)}
-                className="hidden sm:block mr-1 rounded-full p-1 text-gray-300 opacity-0 transition-opacity hover:text-gray-500 group-hover:opacity-100"
+                className="hidden sm:block mr-1 rounded-full p-1 text-gray-300 opacity-0 transition-opacity hover:text-gray-500 group-hover:opacity-100 dark:text-gray-600 dark:hover:text-gray-400"
                 title="Delete label"
               >
                 <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -89,7 +83,6 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* New label */}
       <div className="mt-1 w-full">
         {showNewLabel ? (
           <form onSubmit={handleCreateLabel} className="hidden sm:flex items-center gap-1 px-2">
@@ -100,14 +93,14 @@ export function Sidebar() {
               value={newLabelName}
               onChange={(e) => setNewLabelName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Escape') setShowNewLabel(false); }}
-              className="flex-1 rounded-lg border border-gray-300 px-2 py-1 text-xs outline-none focus:border-violet-400"
+              className="flex-1 rounded-lg border border-gray-300 px-2 py-1 text-xs outline-none focus:border-violet-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:focus:border-violet-500"
             />
             <button type="submit" className="text-xs text-violet-600 font-medium px-1">Add</button>
           </form>
         ) : (
           <button
             onClick={() => setShowNewLabel(true)}
-            className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-400 hover:bg-gray-50 hover:text-gray-600 w-full transition-colors"
+            className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-400 hover:bg-gray-50 hover:text-gray-600 w-full transition-colors dark:hover:bg-gray-700 dark:hover:text-gray-300"
           >
             <svg className="h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -133,8 +126,8 @@ function NavItem({
       onClick={onClick}
       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
         active
-          ? 'bg-yellow-50 text-gray-900'
-          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+          ? 'bg-yellow-50 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100'
       }`}
     >
       {icon}

@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { Note } from '@/types/note';
-import { NOTE_COLOR_MAP } from '@/lib/noteColors';
+import { NOTE_COLOR_MAP, DARK_NOTE_COLOR_MAP } from '@/lib/noteColors';
 import { useNotes } from '@/lib/context/NotesContext';
+import { useTheme } from '@/lib/context/ThemeContext';
 
 interface NoteCardProps {
   note: Note;
@@ -12,8 +13,9 @@ interface NoteCardProps {
 
 export function NoteCard({ note, onClick }: NoteCardProps) {
   const { togglePin, toggleArchive } = useNotes();
+  const { isDark } = useTheme();
   const [hovered, setHovered] = useState(false);
-  const colors = NOTE_COLOR_MAP[note.color];
+  const colors = (isDark ? DARK_NOTE_COLOR_MAP : NOTE_COLOR_MAP)[note.color];
 
   const handlePin = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -60,21 +62,18 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       </button>
 
       <div className="p-4 pr-10">
-        {/* Title */}
         {note.title && (
           <p className="mb-1 font-medium text-sm leading-snug line-clamp-2">
             {note.title}
           </p>
         )}
 
-        {/* Content preview */}
         {previewContent && (
-          <p className="text-sm leading-relaxed text-gray-700 line-clamp-10 whitespace-pre-wrap">
+          <p className="text-sm leading-relaxed line-clamp-10 whitespace-pre-wrap opacity-80">
             {previewContent}
           </p>
         )}
 
-        {/* Labels */}
         {note.labels.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1">
             {note.labels.map(label => (
@@ -118,7 +117,7 @@ function IconBtn({
     <button
       onClick={onClick}
       title={title}
-      className="rounded-full p-1.5 text-gray-500 hover:bg-black/10 hover:text-gray-700 transition-colors"
+      className="rounded-full p-1.5 hover:bg-black/10 transition-colors"
     >
       {children}
     </button>

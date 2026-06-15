@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Note, NoteColor } from '@/types/note';
 import { useNotes } from '@/lib/context/NotesContext';
-import { NOTE_COLOR_MAP } from '@/lib/noteColors';
+import { useTheme } from '@/lib/context/ThemeContext';
+import { NOTE_COLOR_MAP, DARK_NOTE_COLOR_MAP } from '@/lib/noteColors';
 import { Modal } from '@/components/ui/Modal';
 import { ColorPicker } from './ColorPicker';
 
@@ -14,6 +15,7 @@ interface NoteEditorProps {
 
 export function NoteEditor({ note, onClose }: NoteEditorProps) {
   const { updateNote, deleteNote, toggleArchive, addLabelToNote, removeLabelFromNote, labels } = useNotes();
+  const { isDark } = useTheme();
 
   const [title, setTitle] = useState(note?.title ?? '');
   const [content, setContent] = useState(note?.content ?? '');
@@ -28,7 +30,7 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
     titleRef.current?.focus();
   }, []);
 
-  const colors = NOTE_COLOR_MAP[color];
+  const colors = (isDark ? DARK_NOTE_COLOR_MAP : NOTE_COLOR_MAP)[color];
   const hasChanges = note
     ? title !== note.title || content !== note.content || color !== note.color
     : title.trim() !== '' || content.trim() !== '';
@@ -84,7 +86,6 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
         className="rounded-2xl overflow-hidden"
         style={{ backgroundColor: colors.bg, borderColor: colors.border }}
       >
-        {/* Title */}
         <div className="px-4 pt-4">
           <input
             ref={titleRef}
@@ -98,7 +99,6 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
           />
         </div>
 
-        {/* Content */}
         <div className="px-4 py-2">
           <textarea
             placeholder="Take a note…"
@@ -111,7 +111,6 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
           />
         </div>
 
-        {/* Labels */}
         {noteLabels.length > 0 && (
           <div className="px-4 pb-2 flex flex-wrap gap-1">
             {noteLabels.map(label => (
@@ -123,47 +122,40 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
                 {label.name}
                 <button
                   onClick={() => handleLabelToggle(label.id)}
-                  className="ml-0.5 text-gray-400 hover:text-gray-600"
+                  className="ml-0.5 opacity-60 hover:opacity-100"
                 >×</button>
               </span>
             ))}
           </div>
         )}
 
-        {/* Color picker popup */}
         {showColorPicker && (
-          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg">
+          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
             <ColorPicker current={color} onChange={handleColorChange} />
           </div>
         )}
 
-        {/* Label picker popup */}
         {showLabelPicker && labels.length > 0 && (
-          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg p-2 max-h-40 overflow-y-auto">
+          <div className="mx-4 mb-2 rounded-xl border border-gray-200 bg-white shadow-lg p-2 max-h-40 overflow-y-auto dark:border-gray-700 dark:bg-gray-800">
             {labels.map(label => {
               const active = noteLabels.find(l => l.id === label.id);
               return (
                 <button
                   key={label.id}
                   onClick={() => handleLabelToggle(label.id)}
-                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-gray-50"
+                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
-                  <span
-                    className="h-3 w-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: label.color }}
-                  />
-                  <span className="flex-1 text-left text-gray-700">{label.name}</span>
-                  {active && <span className="text-violet-600">✓</span>}
+                  <span className="h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: label.color }} />
+                  <span className="flex-1 text-left text-gray-700 dark:text-gray-300">{label.name}</span>
+                  {active && <span className="text-violet-600 dark:text-violet-400">✓</span>}
                 </button>
               );
             })}
           </div>
         )}
 
-        {/* Toolbar */}
         <div className="flex items-center justify-between border-t border-black/5 px-3 py-2">
           <div className="flex items-center gap-1">
-            {/* Color */}
             <ToolButton
               onClick={() => { setShowColorPicker(p => !p); setShowLabelPicker(false); }}
               title="Change color"
@@ -175,7 +167,6 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
               </svg>
             </ToolButton>
 
-            {/* Labels */}
             <ToolButton
               onClick={() => { setShowLabelPicker(p => !p); setShowColorPicker(false); }}
               title="Labels"
@@ -187,7 +178,6 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
               </svg>
             </ToolButton>
 
-            {/* Archive */}
             <ToolButton onClick={handleArchive} title={note?.is_archived ? 'Unarchive' : 'Archive'}>
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="21 8 21 21 3 21 3 8"/>
@@ -196,7 +186,6 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
               </svg>
             </ToolButton>
 
-            {/* Delete */}
             <ToolButton onClick={handleDelete} title="Delete note">
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="3 6 5 6 21 6"/>
@@ -208,7 +197,7 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
           <button
             onClick={handleClose}
             disabled={saving}
-            className="rounded-lg px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-black/5 disabled:opacity-50"
+            className="rounded-lg px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-black/5 disabled:opacity-50 dark:text-gray-300"
           >
             {saving ? 'Saving…' : 'Close'}
           </button>
@@ -230,8 +219,8 @@ function ToolButton({
     <button
       onClick={onClick}
       title={title}
-      className={`rounded-full p-1.5 text-gray-500 transition-colors hover:bg-black/8 hover:text-gray-700 ${
-        active ? 'bg-black/8 text-gray-700' : ''
+      className={`rounded-full p-1.5 text-gray-500 transition-colors hover:bg-black/8 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ${
+        active ? 'bg-black/8 text-gray-700 dark:text-gray-200' : ''
       }`}
     >
       {children}

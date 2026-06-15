@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-white">
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-gray-900">
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-600 border-t-transparent" />
       </div>
     );
@@ -29,7 +29,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <NotesProvider>
-      <div className="flex h-screen flex-col bg-gray-50">
+      <div className="flex h-screen flex-col bg-gray-50 dark:bg-gray-900">
         <Header />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />
