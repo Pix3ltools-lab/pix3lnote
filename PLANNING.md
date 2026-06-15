@@ -30,7 +30,7 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 | 4 — API Notes | ✅ Completata |
 | 5 — UI | ✅ Completata |
 | 6 — Test E2E | ✅ Completata |
-| 7 — CI/CD e Deploy | 🔶 In sospeso (richiede GitHub) |
+| 7 — CI/CD e Deploy | 🔶 Parziale (Vercel mancante) |
 | 8 — Documentazione | ⬜ Da fare |
 
 ---
@@ -119,14 +119,11 @@ Copiare e adattare il pattern da pix3lboard/pix3lwiki:
 
 ### Fase 7 — CI/CD e Deploy
 
-**Non richiede GitHub:**
 - [x] `scripts/db-init.sh` — setup schema + utente admin CI (completato in Fase 6)
-- [ ] `Dockerfile` per build Docker locale
-- [ ] Aggiornare `docker-compose.yml` nel parent con servizio pix3lnote
-
-**Richiede GitHub:**
-- [ ] Creare repo GitHub e fare push
-- [ ] `.github/workflows/ci.yml` — lint + type-check + E2E (sqld service container)
+- [x] `Dockerfile` per build Docker locale
+- [x] Aggiornare `docker-compose.yml` nel parent con servizio pix3lnote (porta 3002)
+- [x] Creare repo GitHub (`Pix3ltools-lab/pix3lnote`) e fare push
+- [x] `.github/workflows/ci.yml` — lint + type-check + E2E (sqld service container)
 - [ ] Configurare progetto su Vercel collegato al repo GitHub
 - [ ] Configurare variabili d'ambiente su Vercel (`TURSO_*`, `JWT_SECRET`, `BLOB_READ_WRITE_TOKEN`)
 
