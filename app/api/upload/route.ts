@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       const attachmentId = nanoid();
       const now = new Date().toISOString();
       await execute(
-        `INSERT INTO attachments (id, note_id, url, filename, size, mime_type, created_at)
+        `INSERT INTO note_attachments (id, note_id, url, filename, size, mime_type, created_at)
          VALUES (:id, :noteId, :url, :filename, :size, :mimeType, :now)`,
         { id: attachmentId, noteId, url: blob.url, filename: file.name, size: file.size, mimeType: file.type, now }
       );

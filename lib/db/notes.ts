@@ -100,7 +100,7 @@ export async function getNoteById(noteId: string, userId: string): Promise<Note 
 
 export async function getAttachments(noteId: string): Promise<Attachment[]> {
   return query<Attachment>(
-    'SELECT * FROM attachments WHERE note_id = :noteId ORDER BY created_at ASC',
+    'SELECT * FROM note_attachments WHERE note_id = :noteId ORDER BY created_at ASC',
     { noteId }
   );
 }

@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS note_labels (
 CREATE INDEX IF NOT EXISTS idx_note_labels_label_id ON note_labels(label_id);
 
 -- Attachments (images stored on Vercel Blob)
-CREATE TABLE IF NOT EXISTS attachments (
+CREATE TABLE IF NOT EXISTS note_attachments (
   id TEXT PRIMARY KEY,
   note_id TEXT NOT NULL,
   url TEXT NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS attachments (
   created_at TEXT NOT NULL,
   FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
 );
-CREATE INDEX IF NOT EXISTS idx_attachments_note_id ON attachments(note_id);
+CREATE INDEX IF NOT EXISTS idx_note_attachments_note_id ON note_attachments(note_id);
 
 -- Full-text search on notes (FTS5)
 CREATE VIRTUAL TABLE IF NOT EXISTS notes_fts USING fts5(
@@ -106,23 +106,21 @@ CREATE VIRTUAL TABLE IF NOT EXISTS notes_fts USING fts5(
 );
 `;
 
-const triggers = `
-CREATE TRIGGER IF NOT EXISTS notes_fts_insert
+const triggers = [
+  `CREATE TRIGGER IF NOT EXISTS notes_fts_insert
   AFTER INSERT ON notes BEGIN
     INSERT INTO notes_fts(rowid, title, content) VALUES (new.rowid, new.title, new.content);
-  END;
-
-CREATE TRIGGER IF NOT EXISTS notes_fts_delete
+  END`,
+  `CREATE TRIGGER IF NOT EXISTS notes_fts_delete
   AFTER DELETE ON notes BEGIN
     INSERT INTO notes_fts(notes_fts, rowid, title, content) VALUES ('delete', old.rowid, old.title, old.content);
-  END;
-
-CREATE TRIGGER IF NOT EXISTS notes_fts_update
+  END`,
+  `CREATE TRIGGER IF NOT EXISTS notes_fts_update
   AFTER UPDATE ON notes BEGIN
     INSERT INTO notes_fts(notes_fts, rowid, title, content) VALUES ('delete', old.rowid, old.title, old.content);
     INSERT INTO notes_fts(rowid, title, content) VALUES (new.rowid, new.title, new.content);
-  END;
-`;
+  END`,
+];
 
 async function setup() {
   console.log('Setting up pix3lnote database...\n');
@@ -145,12 +143,7 @@ async function setup() {
   }
 
   console.log('\nSetting up FTS triggers...');
-  const triggerStatements = triggers
-    .split(';')
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
-
-  for (const statement of triggerStatements) {
+  for (const statement of triggers) {
     try {
       await client.execute(statement);
       const match = statement.match(/TRIGGER\s+IF\s+NOT\s+EXISTS\s+(\w+)/i);
