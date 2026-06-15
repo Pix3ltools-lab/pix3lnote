@@ -33,7 +33,7 @@ export function Header() {
         <span className="hidden sm:block">
           Pix<span style={{ color: '#ef4444' }}>3</span><span style={{ color: '#3b82f6' }}>l</span>Note
         </span>
-        <span className="hidden sm:block text-xs font-normal text-gray-500 dark:text-neutral-400">v1.0.0</span>
+        <span className="hidden sm:block text-xs font-normal text-gray-500 dark:text-neutral-400">v1.0.1</span>
       </button>
 
       {/* Search */}
