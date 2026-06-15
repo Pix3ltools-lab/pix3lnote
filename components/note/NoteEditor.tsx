@@ -84,7 +84,7 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
     <Modal isOpen onClose={handleClose} maxWidth="max-w-xl">
       <div
         className="rounded-2xl overflow-hidden"
-        style={{ backgroundColor: colors.bg, borderColor: colors.border }}
+        style={{ backgroundColor: colors.bg, borderColor: colors.border, color: colors.text }}
       >
         <div className="px-4 pt-4">
           <input
@@ -197,7 +197,7 @@ export function NoteEditor({ note, onClose }: NoteEditorProps) {
           <button
             onClick={handleClose}
             disabled={saving}
-            className="rounded-lg px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-black/5 disabled:opacity-50 dark:text-gray-300"
+            className="rounded-lg px-4 py-1.5 text-sm font-medium opacity-70 hover:opacity-100 hover:bg-black/5 disabled:opacity-30"
           >
             {saving ? 'Saving…' : 'Close'}
           </button>
@@ -219,8 +219,8 @@ function ToolButton({
     <button
       onClick={onClick}
       title={title}
-      className={`rounded-full p-1.5 text-gray-500 transition-colors hover:bg-black/8 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ${
-        active ? 'bg-black/8 text-gray-700 dark:text-gray-200' : ''
+      className={`rounded-full p-1.5 transition-all hover:bg-black/10 ${
+        active ? 'bg-black/10' : 'opacity-60 hover:opacity-100'
       }`}
     >
       {children}
