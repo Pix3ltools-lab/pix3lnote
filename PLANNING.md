@@ -29,8 +29,8 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 | 3 — Autenticazione | ✅ Completata |
 | 4 — API Notes | ✅ Completata |
 | 5 — UI | ✅ Completata |
-| 6 — Test E2E | ⬜ Da fare |
-| 7 — CI/CD e Deploy | ⬜ Da fare |
+| 6 — Test E2E | ✅ Completata |
+| 7 — CI/CD e Deploy | 🔶 In sospeso (richiede GitHub) |
 | 8 — Documentazione | ⬜ Da fare |
 
 ---
@@ -108,21 +108,27 @@ Copiare e adattare il pattern da pix3lboard/pix3lwiki:
 
 ### Fase 6 — Test E2E
 
-- [ ] Configurare Playwright (`playwright.config.ts`)
-- [ ] `e2e/auth.spec.ts` — login, logout, register, approvazione
-- [ ] `e2e/notes.spec.ts` — CRUD note, pin, archivio, colori
-- [ ] `e2e/labels.spec.ts` — CRUD etichette, assegnazione
-- [ ] `e2e/search.spec.ts` — ricerca full-text
-- [ ] `e2e/fixtures.ts` — helpers condivisi
+- [x] Configurare Playwright (`playwright.config.ts`) con progetti setup + chromium
+- [x] `e2e/auth.setup.ts` — login e salvataggio sessione per tutti i test
+- [x] `e2e/auth.spec.ts` — login valido, password errata, redirect, logout, register pending
+- [x] `e2e/notes.spec.ts` — crea, modifica, elimina, pin, archivio/unarchivio, colori
+- [x] `e2e/labels.spec.ts` — crea, assegna, filtra, rimuovi, elimina etichetta
+- [x] `e2e/search.spec.ts` — ricerca per titolo, contenuto, nessun risultato, clear, conteggio
+- [x] `e2e/fixtures.ts` — helpers: loginAs, createNote, openNote, closeNote, uniqueName
+- [x] `scripts/db-init.sh` — setup schema + creazione utente admin per CI
 
 ### Fase 7 — CI/CD e Deploy
 
-- [ ] `scripts/db-init.sh` — setup DB + migrazioni + utente di test
-- [ ] `.github/workflows/ci.yml` — lint + type-check + E2E (sqld in container)
-- [ ] Configurare progetto su Vercel
-- [ ] Configurare variabili d'ambiente su Vercel
-- [ ] `Dockerfile` per sviluppo locale con Docker
+**Non richiede GitHub:**
+- [x] `scripts/db-init.sh` — setup schema + utente admin CI (completato in Fase 6)
+- [ ] `Dockerfile` per build Docker locale
 - [ ] Aggiornare `docker-compose.yml` nel parent con servizio pix3lnote
+
+**Richiede GitHub:**
+- [ ] Creare repo GitHub e fare push
+- [ ] `.github/workflows/ci.yml` — lint + type-check + E2E (sqld service container)
+- [ ] Configurare progetto su Vercel collegato al repo GitHub
+- [ ] Configurare variabili d'ambiente su Vercel (`TURSO_*`, `JWT_SECRET`, `BLOB_READ_WRITE_TOKEN`)
 
 ### Fase 8 — Documentazione
 
