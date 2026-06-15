@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-06-15
+
+### Fixed
+
+- **Dark mode color palette** — replaced Tailwind `gray` with `neutral` across all dark mode classes; removes the blue tint and matches Pix3lBoard's warm neutral dark theme (`#1a1a1a` / `#2d2d2d`)
+
+### Changed
+
+- **Docker deploy docs** — README now references `pix3ltools-deploy` for the full stack setup (port 3003)
+
+---
+
 ## [1.0.0] - 2026-06-15
 
 ### Added
