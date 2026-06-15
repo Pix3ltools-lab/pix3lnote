@@ -157,15 +157,15 @@ npm run start
 
 ### Deploy with Docker
 
-Pix3lNote ships as part of the [Pix3lTools Docker stack](https://github.com/Pix3ltools-lab/pix3ltools-deploy). The shared `docker-compose.yml` in the parent directory runs Pix3lBoard, Pix3lWiki, Pix3lNote, and a local sqld database — no cloud services required.
+Pix3lNote ships as part of the [Pix3lTools Docker stack](https://github.com/Pix3ltools-lab/pix3ltools-deploy). Run the full stack with one command:
 
 ```bash
-# From the parent VercelApps directory
-cp .env.example .env   # set JWT_SECRET
-docker compose up -d
+git clone https://github.com/Pix3ltools-lab/pix3ltools-deploy.git
+cd pix3ltools-deploy
+./setup.sh
 ```
 
-Pix3lNote is available on port **3002** (`http://localhost:3002`).
+Pix3lNote is available on port **3003** (`http://localhost:3003`).
 
 To build only the Pix3lNote image:
 ```bash
