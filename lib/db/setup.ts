@@ -35,11 +35,13 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 -- Rate limits (login brute-force protection)
 CREATE TABLE IF NOT EXISTS rate_limits (
   id TEXT PRIMARY KEY,
-  identifier TEXT NOT NULL UNIQUE,
+  identifier TEXT NOT NULL,
+  endpoint TEXT NOT NULL DEFAULT 'login',
   attempts INTEGER NOT NULL DEFAULT 0,
+  window_start TEXT NOT NULL,
   locked_until TEXT,
   created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL
+  UNIQUE (identifier, endpoint)
 );
 CREATE INDEX IF NOT EXISTS idx_rate_limits_identifier ON rate_limits(identifier);
 

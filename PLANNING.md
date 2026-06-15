@@ -20,28 +20,44 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 
 ---
 
+## Stato avanzamento
+
+| Fase | Stato |
+|------|-------|
+| 1 — Setup progetto | ✅ Completata |
+| 2 — Database | ✅ Completata |
+| 3 — Autenticazione | ⬜ Da fare |
+| 4 — API Notes | ⬜ Da fare |
+| 5 — UI | ⬜ Da fare |
+| 6 — Test E2E | ⬜ Da fare |
+| 7 — CI/CD e Deploy | ⬜ Da fare |
+| 8 — Documentazione | ⬜ Da fare |
+
+---
+
 ## Fasi di sviluppo
 
 ### Fase 1 — Setup progetto
 
-- [ ] Inizializzare repo Next.js 14 con TypeScript e Tailwind
-- [ ] Configurare ESLint, Prettier, tsconfig strict
-- [ ] Creare `.env.example` con le variabili necessarie
-- [ ] Inizializzare repo Git con `.gitignore`
-- [ ] Creare `CLAUDE.md` con istruzioni per Claude Code
+- [x] Inizializzare repo Next.js 14 con TypeScript e Tailwind
+- [x] Configurare ESLint, tsconfig strict
+- [x] Creare `.env.example` con le variabili necessarie
+- [x] Inizializzare repo Git con `.gitignore`
+- [x] Creare `CLAUDE.md` con istruzioni per Claude Code
 
 ### Fase 2 — Database
 
-- [ ] Creare database Turso dedicato (`pix3lnote`)
-- [ ] Scrivere `lib/db/turso.ts` (client Turso)
-- [ ] Scrivere `lib/db/setup.ts` con schema iniziale:
+- [ ] Creare database Turso dedicato (`pix3lnote`) ← da fare manualmente
+- [x] Scrivere `lib/db/turso.ts` (client Turso)
+- [x] Scrivere `lib/db/setup.ts` con schema iniziale:
   - `users` (id, email, password_hash, name, is_admin, is_approved, created_at, updated_at)
   - `rate_limits` (id, identifier, attempts, locked_until, created_at, updated_at)
-  - `notes` (id, user_id, title, content, color, is_pinned, is_archived, created_at, updated_at)
+  - `notes` (id, user_id, title, content, color, is_pinned, is_archived, position, created_at, updated_at)
   - `labels` (id, user_id, name, color, created_at)
   - `note_labels` (note_id, label_id)
   - `attachments` (id, note_id, url, filename, size, mime_type, created_at)
-- [ ] Testare connessione e setup DB
+  - `notes_fts` (FTS5 virtual table + trigger insert/update/delete)
+- [ ] Testare connessione e setup DB ← dopo creazione DB Turso
 
 ### Fase 3 — Autenticazione
 
