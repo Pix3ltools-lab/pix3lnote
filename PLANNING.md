@@ -28,7 +28,7 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 | 2 — Database | ✅ Completata |
 | 3 — Autenticazione | ✅ Completata |
 | 4 — API Notes | ✅ Completata |
-| 5 — UI | ⬜ Da fare |
+| 5 — UI | ✅ Completata |
 | 6 — Test E2E | ⬜ Da fare |
 | 7 — CI/CD e Deploy | ⬜ Da fare |
 | 8 — Documentazione | ⬜ Da fare |
@@ -93,17 +93,18 @@ Copiare e adattare il pattern da pix3lboard/pix3lwiki:
 
 ### Fase 5 — UI Note (frontend)
 
-- [ ] Layout principale autenticato (`app/(app)/layout.tsx`)
-- [ ] `lib/context/NotesContext.tsx` — stato globale note, CRUD, ottimistic update
-- [ ] Componente `NoteCard` — card stile Keep (colore, pin, etichette, anteprima)
-- [ ] Componente `NoteEditor` — modale/inline per creare/modificare nota (titolo + contenuto)
-- [ ] Componente `NoteGrid` / `NoteList` — griglia e lista con toggle
-- [ ] Barra di ricerca con ricerca live
-- [ ] Sidebar etichette
-- [ ] Vista archivio (`/archive`)
-- [ ] Gestione colori nota (palette colori)
-- [ ] Drag & drop per riordinare (opzionale)
-- [ ] Upload immagini nella nota
+- [x] Layout principale autenticato (`app/(app)/layout.tsx`) con redirect se non autenticato
+- [x] `lib/context/NotesContext.tsx` — stato globale note, CRUD, update ottimistico per pin/archive/labels
+- [x] Componente `NoteCard` — card con colore, pin (hover), label chips, toolbar archive
+- [x] Componente `NoteEditor` — modale con title, content, color picker, label picker, delete, archive
+- [x] Componente `NoteCreator` — box inline espandibile in cima alla home
+- [x] Componente `NoteGrid` — layout a colonne masonry (CSS columns)
+- [x] `components/layout/Header.tsx` — ricerca live con FTS5, user menu, logo
+- [x] `components/layout/Sidebar.tsx` — nav Notes/Archive, etichette con CRUD inline
+- [x] Vista archivio (`/archive`)
+- [x] Gestione colori nota (11 colori, palette visiva)
+- [ ] Drag & drop per riordinare — rimandato (opzionale)
+- [ ] Upload immagini nella nota — API pronta, UI non implementata
 
 ### Fase 6 — Test E2E
 

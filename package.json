@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:setup": "npx tsx lib/db/setup.ts"
+    "db:setup": "npx tsx lib/db/setup.ts",
+    "db:init": "bash scripts/db-init.sh",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
@@ -21,6 +24,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
