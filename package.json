@@ -9,7 +9,9 @@
     "lint": "next lint",
     "db:setup": "npx tsx lib/db/setup.ts",
     "db:init": "bash scripts/db-init.sh",
+    "type-check": "tsc --noEmit",
     "test": "playwright test",
+    "test:e2e": "playwright test",
     "test:ui": "playwright test --ui"
   },
   "dependencies": {
