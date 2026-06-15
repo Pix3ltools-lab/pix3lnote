@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import { useNotes } from '@/lib/context/NotesContext';
 import { useTheme } from '@/lib/context/ThemeContext';
+import { usePix3lConfig } from '@/lib/hooks/usePix3lConfig';
 
 export function Header() {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const { search, clearSearch, searchQuery } = useNotes();
   const { isDark, toggleTheme } = useTheme();
+  const { pix3lboardUrl } = usePix3lConfig();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleSearch = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +59,21 @@ export function Header() {
           </button>
         )}
       </div>
+
+      {/* Pix3lBoard link */}
+      <a
+        href={pix3lboardUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hidden sm:flex flex-shrink-0 items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-200"
+      >
+        Pix3lBoard
+        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
 
       {/* Theme toggle */}
       <button
