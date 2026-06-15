@@ -27,7 +27,7 @@ Ogni ambiente usa le stesse variabili d'ambiente (`TURSO_DATABASE_URL`, `TURSO_A
 | 1 — Setup progetto | ✅ Completata |
 | 2 — Database | ✅ Completata |
 | 3 — Autenticazione | ✅ Completata |
-| 4 — API Notes | ⬜ Da fare |
+| 4 — API Notes | ✅ Completata |
 | 5 — UI | ⬜ Da fare |
 | 6 — Test E2E | ⬜ Da fare |
 | 7 — CI/CD e Deploy | ⬜ Da fare |
@@ -77,16 +77,19 @@ Copiare e adattare il pattern da pix3lboard/pix3lwiki:
 
 ### Fase 4 — API Notes (backend)
 
-- [ ] `app/api/notes/route.ts` — GET (lista) + POST (crea)
-- [ ] `app/api/notes/[id]/route.ts` — GET + PATCH + DELETE
-- [ ] `app/api/notes/[id]/archive/route.ts` — POST archivio
-- [ ] `app/api/notes/[id]/pin/route.ts` — POST pin/unpin
-- [ ] `app/api/labels/route.ts` — GET + POST
-- [ ] `app/api/labels/[id]/route.ts` — PATCH + DELETE
-- [ ] `app/api/notes/[id]/labels/route.ts` — POST + DELETE (assegna/rimuovi etichette)
-- [ ] `app/api/upload/route.ts` — upload allegati su Vercel Blob
-- [ ] `app/api/search/route.ts` — ricerca full-text (Turso FTS5)
-- [ ] Validazione Zod per tutti gli input (`lib/validation/`)
+- [x] `app/api/notes/route.ts` — GET (lista, filtro archived/label) + POST (crea)
+- [x] `app/api/notes/[id]/route.ts` — GET + PATCH + DELETE
+- [x] `app/api/notes/[id]/archive/route.ts` — POST toggle archivio
+- [x] `app/api/notes/[id]/pin/route.ts` — POST toggle pin
+- [x] `app/api/labels/route.ts` — GET + POST
+- [x] `app/api/labels/[id]/route.ts` — PATCH + DELETE
+- [x] `app/api/notes/[id]/labels/route.ts` — POST + DELETE (assegna/rimuovi etichette)
+- [x] `app/api/upload/route.ts` — upload immagini su Vercel Blob (max 5 MB, JPEG/PNG/GIF/WebP)
+- [x] `app/api/search/route.ts` — ricerca full-text FTS5 con prefix wildcard
+- [x] Validazione Zod per tutti gli input (`lib/validation/noteSchemas.ts`)
+- [x] `lib/auth/apiAuth.ts` — helper `requireAuth` condiviso
+- [x] `lib/db/notes.ts` — query helper (getNotes, getNoteById, searchNotes, …)
+- [x] `types/note.ts` — tipi Note, Label, Attachment, NoteColor
 
 ### Fase 5 — UI Note (frontend)
 
