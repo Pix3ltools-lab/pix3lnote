@@ -35,6 +35,9 @@ yarn-error.log*
 # security
 security.md
 
+# internal dev notes
+PLANNING.md
+
 # test db
 *.db
 
