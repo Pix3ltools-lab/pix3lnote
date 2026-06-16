@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+// import Link from 'next/link'; // re-enable when registration is reopened
 import { useAuth } from '@/lib/context/AuthContext';
 
 export default function LoginPage() {
@@ -98,12 +98,14 @@ export default function LoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
 
+          {/* Registration disabled — re-enable by uncommenting this block and the Link import above
           <p className="text-center text-sm text-gray-500 dark:text-neutral-400">
             No account?{' '}
             <Link href="/register" className="text-violet-600 hover:underline dark:text-violet-400">
               Register
             </Link>
           </p>
+          */}
         </form>
       </div>
     </div>
