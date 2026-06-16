@@ -7,7 +7,7 @@ import { NoteGrid } from '@/components/note/NoteGrid';
 
 export default function HomePage() {
   const searchParams = useSearchParams();
-  const { notes, searchResults, searchQuery, isLoading } = useNotes();
+  const { notes, sharedNotes, searchResults, searchQuery, isLoading } = useNotes();
   const labelFilter = searchParams.get('label');
 
   if (isLoading) {
@@ -65,6 +65,13 @@ export default function HomePage() {
             </section>
           )}
         </>
+      )}
+
+      {!labelFilter && sharedNotes.length > 0 && (
+        <section className="mt-8">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">Shared with you</p>
+          <NoteGrid notes={sharedNotes} />
+        </section>
       )}
     </div>
   );

@@ -56,7 +56,10 @@ export async function POST(request: NextRequest) {
     void posResult;
 
     return NextResponse.json({
-      note: { id, title, content, color, is_pinned, is_archived: false, position, created_at: now, updated_at: now, labels: [] }
+      note: {
+        id, title, content, color, is_pinned, is_archived: false, position, created_at: now, updated_at: now,
+        labels: [], checklist: [], access: 'owner', share_count: 0,
+      }
     }, { status: 201 });
   } catch (error) {
     console.error('POST /api/notes error:', error);

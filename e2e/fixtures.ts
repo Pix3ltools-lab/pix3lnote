@@ -37,8 +37,9 @@ export async function createNote(page: Page, title: string, content = '') {
  */
 export async function openNote(page: Page, title: string) {
   await page.locator(`text=${title}`).first().click();
-  // Wait for modal to open — textarea should be visible
-  await expect(page.locator('textarea[placeholder="Take a note…"]')).toBeVisible({ timeout: 5000 });
+  // Wait for modal to open — the editor's textarea is the last match
+  // (the inline NoteCreator textarea on the page shares the same placeholder).
+  await expect(page.locator('textarea[placeholder="Take a note…"]').last()).toBeVisible({ timeout: 5000 });
 }
 
 /**
@@ -46,7 +47,7 @@ export async function openNote(page: Page, title: string) {
  */
 export async function closeNote(page: Page) {
   await page.click('button:has-text("Close")');
-  await expect(page.locator('textarea[placeholder="Take a note…"]')).not.toBeVisible({ timeout: 3000 });
+  await expect(page.locator('textarea[placeholder="Take a note…"]')).toHaveCount(1, { timeout: 3000 });
 }
 
 /**

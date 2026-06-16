@@ -5,7 +5,7 @@
 [![Turso](https://img.shields.io/badge/Turso-SQLite-4FF8D2.svg?style=flat&logo=turso)](https://turso.tech/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4.svg?style=flat&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg?style=flat)](#)
+[![Version](https://img.shields.io/badge/Version-1.1.0-orange.svg?style=flat)](#)
 [![Platform](https://img.shields.io/badge/Platform-Vercel-black.svg?style=flat&logo=vercel)](https://vercel.com/)
 [![Platform](https://img.shields.io/badge/Platform-Docker-2496ED.svg?style=flat&logo=docker&logoColor=white)](#deploy-with-docker)
 
@@ -22,6 +22,8 @@ A Google Keep-inspired note-taking application built with Next.js 14. Notes are 
 - **Full-Text Search**: FTS5-powered instant search across titles and content
 - **Masonry Grid**: Responsive columns layout (1→2→3→4 columns)
 - **Image Uploads**: Attach images to notes (Vercel Blob, max 5 MB, JPEG/PNG/GIF/WebP)
+- **Checklists**: Add checkbox items to a note, independent of the free-text content; check, edit, or remove items inline
+- **Note Sharing**: Share a note with another user by email as `viewer` (read-only) or `editor` (can edit content, not delete/archive/share); shared notes appear in a "Shared with you" section
 
 ### User Experience
 - **Dark / Light Mode**: Toggle in the header, preference saved in localStorage
@@ -191,7 +193,7 @@ pix3lnote/
 │   └── api/
 │       ├── auth/               # login, logout, me, refresh, register
 │       ├── admin/              # users, approve, reset-password
-│       ├── notes/              # CRUD + archive + pin + labels
+│       ├── notes/              # CRUD + archive + pin + labels + shares + checklist
 │       ├── labels/             # CRUD
 │       ├── search/             # FTS5 full-text search
 │       ├── upload/             # Vercel Blob image upload
@@ -205,7 +207,9 @@ pix3lnote/
 │   │   ├── NoteCreator.tsx     # Inline note creation box
 │   │   ├── NoteEditor.tsx      # Full note editor modal
 │   │   ├── NoteGrid.tsx        # Masonry columns grid
-│   │   └── ColorPicker.tsx     # 11-color palette
+│   │   ├── ColorPicker.tsx     # 11-color palette
+│   │   ├── ChecklistSection.tsx # Checkbox items inside the editor
+│   │   └── ShareModal.tsx      # Manage note sharing (viewer/editor roles)
 │   └── ui/
 │       └── Modal.tsx           # Base modal component
 ├── lib/
@@ -220,7 +224,7 @@ pix3lnote/
 │   ├── db/
 │   │   ├── turso.ts            # Singleton Turso client
 │   │   ├── setup.ts            # Schema initialization (CREATE TABLE IF NOT EXISTS)
-│   │   └── notes.ts            # Query helpers (getNotes, searchNotes, etc.)
+│   │   └── notes.ts            # Query helpers (getNotes, searchNotes, sharing, checklist, etc.)
 │   ├── hooks/
 │   │   └── usePix3lConfig.ts   # Cross-app URL config from window.__PIX3L_CONFIG__
 │   ├── validation/
@@ -228,7 +232,7 @@ pix3lnote/
 │   ├── noteColors.ts           # Color maps for light and dark mode
 │   └── env.ts                  # Environment variable validation
 ├── types/
-│   └── note.ts                 # Note, Label, Attachment, NoteColor types
+│   └── note.ts                 # Note, Label, Attachment, NoteColor, NoteShare, ChecklistItem types
 ├── e2e/                        # Playwright E2E tests
 ├── scripts/
 │   └── db-init.sh              # Schema setup + test admin user (for CI)
@@ -252,6 +256,8 @@ Pix3lNote adds the following tables to the shared Turso database (existing table
 | `labels` | User-defined color labels |
 | `note_labels` | Many-to-many note ↔ label association |
 | `note_attachments` | Image uploads linked to notes |
+| `note_shares` | Note ↔ user sharing grants (`viewer` / `editor` role) |
+| `note_checklist_items` | Checklist items belonging to a note |
 | `notes_fts` | FTS5 virtual table for full-text search |
 
 ## Available Scripts
@@ -290,6 +296,7 @@ npm run test:ui      # Playwright UI mode
 - No drag & drop to reorder notes (position field is stored, UI not implemented)
 - No offline support
 - Image upload UI not exposed in the note editor (API endpoint is ready)
+- Shared notes have no real-time collaboration or conflict resolution: concurrent edits by owner and editor are last-write-wins
 
 ## Contributing
 

@@ -30,7 +30,25 @@ export const labelActionSchema = z.object({
   labelId: z.string().min(1),
 });
 
+export const shareNoteSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(['viewer', 'editor']).optional().default('viewer'),
+});
+
+export const createChecklistItemSchema = z.object({
+  text: z.string().min(1).max(500),
+});
+
+export const updateChecklistItemSchema = z.object({
+  text: z.string().min(1).max(500).optional(),
+  checked: z.boolean().optional(),
+  position: z.number().int().min(0).optional(),
+});
+
 export type CreateNoteInput = z.infer<typeof createNoteSchema>;
 export type UpdateNoteInput = z.infer<typeof updateNoteSchema>;
 export type CreateLabelInput = z.infer<typeof createLabelSchema>;
 export type UpdateLabelInput = z.infer<typeof updateLabelSchema>;
+export type ShareNoteInput = z.infer<typeof shareNoteSchema>;
+export type CreateChecklistItemInput = z.infer<typeof createChecklistItemSchema>;
+export type UpdateChecklistItemInput = z.infer<typeof updateChecklistItemSchema>;

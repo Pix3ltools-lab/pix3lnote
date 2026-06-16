@@ -31,6 +31,9 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
     ? note.content.slice(0, 200) + '…'
     : note.content;
 
+  const isShared = note.access !== 'owner' || (note.share_count ?? 0) > 0;
+  const checklistPreview = note.checklist.slice(0, 5);
+
   return (
     <div
       onClick={onClick}
@@ -44,24 +47,39 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       className="relative rounded-xl border cursor-pointer transition-shadow hover:shadow-md break-inside-avoid"
     >
       {/* Pin button */}
-      <button
-        onClick={handlePin}
-        title={note.is_pinned ? 'Unpin' : 'Pin'}
-        style={{ opacity: hovered || note.is_pinned ? 1 : 0 }}
-        className="absolute right-2 top-2 rounded-full p-1 transition-all hover:bg-black/10 z-10"
-      >
-        <svg
-          className="h-4 w-4"
-          viewBox="0 0 24 24"
-          fill={note.is_pinned ? 'currentColor' : 'none'}
-          stroke="currentColor"
-          strokeWidth="2"
+      {note.access === 'owner' && (
+        <button
+          onClick={handlePin}
+          title={note.is_pinned ? 'Unpin' : 'Pin'}
+          style={{ opacity: hovered || note.is_pinned ? 1 : 0 }}
+          className="absolute right-2 top-2 rounded-full p-1 transition-all hover:bg-black/10 z-10"
         >
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-      </button>
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill={note.is_pinned ? 'currentColor' : 'none'}
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        </button>
+      )}
 
       <div className="p-4 pr-10">
+        {isShared && (
+          <div className="mb-1.5 flex items-center gap-1 text-xs opacity-60">
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="18" cy="5" r="3"/>
+              <circle cx="6" cy="12" r="3"/>
+              <circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+            {note.access === 'owner' ? `Shared with ${note.share_count}` : `Shared by ${note.owner_name}`}
+          </div>
+        )}
+
         {note.title && (
           <p className="mb-1 font-medium text-sm leading-snug line-clamp-2">
             {note.title}
@@ -72,6 +90,20 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
           <p className="text-sm leading-relaxed line-clamp-10 whitespace-pre-wrap opacity-80">
             {previewContent}
           </p>
+        )}
+
+        {checklistPreview.length > 0 && (
+          <div className="mt-2 space-y-1">
+            {checklistPreview.map(item => (
+              <div key={item.id} className="flex items-center gap-2 text-xs">
+                <input type="checkbox" checked={item.checked} disabled className="h-3 w-3 accent-violet-600" />
+                <span className={item.checked ? 'line-through opacity-50' : 'opacity-80'}>{item.text}</span>
+              </div>
+            ))}
+            {note.checklist.length > 5 && (
+              <p className="text-xs opacity-50">+{note.checklist.length - 5} more</p>
+            )}
+          </div>
         )}
 
         {note.labels.length > 0 && (
@@ -90,6 +122,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       </div>
 
       {/* Bottom toolbar (on hover) */}
+      {note.access === 'owner' && (
       <div
         style={{ opacity: hovered ? 1 : 0 }}
         className="flex items-center gap-1 border-t border-black/5 px-3 py-1.5 transition-opacity"
@@ -102,6 +135,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
           </svg>
         </IconBtn>
       </div>
+      )}
     </div>
   );
 }

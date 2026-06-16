@@ -84,6 +84,33 @@ CREATE TABLE IF NOT EXISTS note_labels (
 );
 CREATE INDEX IF NOT EXISTS idx_note_labels_label_id ON note_labels(label_id);
 
+-- Note shares (collaborative access to a note)
+CREATE TABLE IF NOT EXISTS note_shares (
+  id TEXT PRIMARY KEY,
+  note_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'viewer',
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE (note_id, user_id)
+);
+CREATE INDEX IF NOT EXISTS idx_note_shares_note_id ON note_shares(note_id);
+CREATE INDEX IF NOT EXISTS idx_note_shares_user_id ON note_shares(user_id);
+
+-- Checklist items inside a note
+CREATE TABLE IF NOT EXISTS note_checklist_items (
+  id TEXT PRIMARY KEY,
+  note_id TEXT NOT NULL,
+  text TEXT NOT NULL,
+  checked INTEGER NOT NULL DEFAULT 0,
+  position INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_note_checklist_items_note_id ON note_checklist_items(note_id);
+
 -- Attachments (images stored on Vercel Blob)
 CREATE TABLE IF NOT EXISTS note_attachments (
   id TEXT PRIMARY KEY,

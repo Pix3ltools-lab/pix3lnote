@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-06-16
+
+### Added
+
+- **Note sharing** — share any note with another Pix3lTools user by email, with `viewer` (read-only) or `editor` (can edit content, not delete/archive/share) roles. Owners manage access from a new share icon in the note editor; shared notes appear in a "Shared with you" section on the home page with the owner's name shown
+- **Checklists** — notes can now hold a checklist of items with checkboxes, independent of the free-text content; items can be added, checked, edited inline, and removed. Checklist previews (first 5 items) show on the note card
+- New tables `note_shares` and `note_checklist_items` (additive, `CREATE TABLE IF NOT EXISTS`)
+- New endpoints: `GET/POST /api/notes/[id]/shares`, `DELETE /api/notes/[id]/shares/[userId]`, `GET /api/notes/shared`, `POST /api/notes/[id]/checklist`, `PATCH/DELETE /api/notes/[id]/checklist/[itemId]`
+- Playwright E2E coverage for sharing and checklist flows (`e2e/sharing.spec.ts`, `e2e/checklist.spec.ts`)
+
+### Fixed
+
+- `NoteEditor` now keeps checklist state locally (like it already did for labels) instead of reading directly from the `note` prop snapshot, so newly added/checked/removed items reflect immediately in the open editor instead of only after reopening it
+- `e2e/fixtures.ts`'s `openNote`/`closeNote` helpers no longer hit a Playwright strict-mode violation against the always-present `NoteCreator` textarea
+
+---
+
 ## [1.0.1] - 2026-06-15
 
 ### Fixed

@@ -125,6 +125,25 @@ export async function getUserById(id: string): Promise<User | null> {
   };
 }
 
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const row = await queryOne<UserRow>(
+    'SELECT id, email, name, is_admin, is_approved, created_at, updated_at FROM users WHERE email = :email',
+    { email: email.toLowerCase() }
+  );
+
+  if (!row) return null;
+
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    is_admin: Boolean(row.is_admin),
+    is_approved: Boolean(row.is_approved),
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
+
 export async function changePassword(
   userId: string,
   currentPassword: string,

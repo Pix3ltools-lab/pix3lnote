@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/apiAuth';
-import { getNoteById, getAttachments, isNoteOwner } from '@/lib/db/notes';
+import { getNoteByIdAny, getNoteOwnerInfo, getNoteAccess, getAttachments } from '@/lib/db/notes';
 import { execute } from '@/lib/db/turso';
 import { updateNoteSchema } from '@/lib/validation/noteSchemas';
 
@@ -14,8 +14,17 @@ export async function GET(
     const user = await requireAuth(request);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const note = await getNoteById(params.id, user.id);
+    const access = await getNoteAccess(params.id, user.id);
+    if (!access) return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+
+    const note = await getNoteByIdAny(params.id);
     if (!note) return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+    note.access = access;
+
+    if (access !== 'owner') {
+      const owner = await getNoteOwnerInfo(params.id);
+      note.owner_name = owner?.name ?? owner?.email ?? null;
+    }
 
     const attachments = await getAttachments(params.id);
     return NextResponse.json({ note: { ...note, attachments } });
@@ -33,8 +42,10 @@ export async function PATCH(
     const user = await requireAuth(request);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (!await isNoteOwner(params.id, user.id)) {
-      return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+    const access = await getNoteAccess(params.id, user.id);
+    if (!access) return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+    if (access === 'viewer') {
+      return NextResponse.json({ error: 'You only have view access to this note' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -63,7 +74,14 @@ export async function PATCH(
 
     await execute(`UPDATE notes SET ${fields.join(', ')} WHERE id = :id`, args);
 
-    const note = await getNoteById(params.id, user.id);
+    const note = await getNoteByIdAny(params.id);
+    if (note) {
+      note.access = access;
+      if (access !== 'owner') {
+        const owner = await getNoteOwnerInfo(params.id);
+        note.owner_name = owner?.name ?? owner?.email ?? null;
+      }
+    }
     return NextResponse.json({ note });
   } catch (error) {
     console.error('PATCH /api/notes/[id] error:', error);
@@ -79,7 +97,8 @@ export async function DELETE(
     const user = await requireAuth(request);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (!await isNoteOwner(params.id, user.id)) {
+    const access = await getNoteAccess(params.id, user.id);
+    if (access !== 'owner') {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 });
     }
 

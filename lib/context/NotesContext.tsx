@@ -4,12 +4,13 @@ import {
   createContext, useContext, useState, useEffect,
   useCallback, ReactNode,
 } from 'react';
-import { Note, Label } from '@/types/note';
+import { Note, Label, ChecklistItem, NoteShare } from '@/types/note';
 import { CreateNoteInput, UpdateNoteInput } from '@/lib/validation/noteSchemas';
 
 interface NotesContextType {
   notes: Note[];
   archivedNotes: Note[];
+  sharedNotes: Note[];
   labels: Label[];
   isLoading: boolean;
   searchResults: Note[] | null;
@@ -27,6 +28,14 @@ interface NotesContextType {
   search: (q: string) => Promise<void>;
   clearSearch: () => void;
   refreshNotes: () => Promise<void>;
+
+  addChecklistItem: (noteId: string, text: string) => Promise<ChecklistItem | null>;
+  updateChecklistItem: (noteId: string, itemId: string, updates: Partial<Pick<ChecklistItem, 'text' | 'checked'>>) => Promise<void>;
+  deleteChecklistItem: (noteId: string, itemId: string) => Promise<void>;
+
+  fetchNoteShares: (noteId: string) => Promise<NoteShare[]>;
+  shareNote: (noteId: string, email: string, role: 'viewer' | 'editor') => Promise<{ share: NoteShare } | { error: string }>;
+  unshareNote: (noteId: string, userId: string) => Promise<void>;
 }
 
 const NotesContext = createContext<NotesContextType | undefined>(undefined);
@@ -34,22 +43,34 @@ const NotesContext = createContext<NotesContextType | undefined>(undefined);
 export function NotesProvider({ children }: { children: ReactNode }) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [archivedNotes, setArchivedNotes] = useState<Note[]>([]);
+  const [sharedNotes, setSharedNotes] = useState<Note[]>([]);
   const [labels, setLabels] = useState<Label[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchResults, setSearchResults] = useState<Note[] | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  /** Applies an update to a note wherever it currently lives (own, archived, or shared). */
+  const patchNoteEverywhere = useCallback((id: string, updater: (note: Note) => Note) => {
+    const apply = (arr: Note[]) => arr.map(n => n.id === id ? updater(n) : n);
+    setNotes(apply);
+    setArchivedNotes(apply);
+    setSharedNotes(apply);
+  }, []);
+
   const fetchNotes = useCallback(async () => {
-    const [activeRes, labelsRes] = await Promise.all([
+    const [activeRes, labelsRes, sharedRes] = await Promise.all([
       fetch('/api/notes'),
       fetch('/api/labels'),
+      fetch('/api/notes/shared'),
     ]);
-    const [activeData, labelsData] = await Promise.all([
+    const [activeData, labelsData, sharedData] = await Promise.all([
       activeRes.json(),
       labelsRes.json(),
+      sharedRes.json(),
     ]);
     setNotes(activeData.notes ?? []);
     setLabels(labelsData.labels ?? []);
+    setSharedNotes(sharedData.notes ?? []);
   }, []);
 
   const fetchArchived = useCallback(async () => {
@@ -85,8 +106,8 @@ export function NotesProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updateNote = useCallback(async (id: string, data: UpdateNoteInput) => {
-    // Optimistic update
-    setNotes(prev => prev.map(n => n.id === id ? { ...n, ...data } : n));
+    // Optimistic update (note may live in notes, archivedNotes, or sharedNotes)
+    patchNoteEverywhere(id, n => ({ ...n, ...data }));
 
     const res = await fetch(`/api/notes/${id}`, {
       method: 'PATCH',
@@ -96,12 +117,12 @@ export function NotesProvider({ children }: { children: ReactNode }) {
 
     if (res.ok) {
       const { note } = await res.json();
-      setNotes(prev => prev.map(n => n.id === id ? note : n));
+      patchNoteEverywhere(id, () => note);
     } else {
       // Revert on failure
       await fetchNotes();
     }
-  }, [fetchNotes]);
+  }, [fetchNotes, patchNoteEverywhere]);
 
   const deleteNote = useCallback(async (id: string) => {
     setNotes(prev => prev.filter(n => n.id !== id));
@@ -201,12 +222,81 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     setSearchResults(null);
   }, []);
 
+  const addChecklistItem = useCallback(async (noteId: string, text: string): Promise<ChecklistItem | null> => {
+    const res = await fetch(`/api/notes/${noteId}/checklist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    if (!res.ok) return null;
+    const { item } = await res.json();
+    patchNoteEverywhere(noteId, n => ({ ...n, checklist: [...n.checklist, item] }));
+    return item;
+  }, [patchNoteEverywhere]);
+
+  const updateChecklistItem = useCallback(async (
+    noteId: string,
+    itemId: string,
+    updates: Partial<Pick<ChecklistItem, 'text' | 'checked'>>
+  ) => {
+    patchNoteEverywhere(noteId, n => ({
+      ...n,
+      checklist: n.checklist.map(item => item.id === itemId ? { ...item, ...updates } : item),
+    }));
+
+    await fetch(`/api/notes/${noteId}/checklist/${itemId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    });
+  }, [patchNoteEverywhere]);
+
+  const deleteChecklistItem = useCallback(async (noteId: string, itemId: string) => {
+    patchNoteEverywhere(noteId, n => ({
+      ...n,
+      checklist: n.checklist.filter(item => item.id !== itemId),
+    }));
+
+    await fetch(`/api/notes/${noteId}/checklist/${itemId}`, { method: 'DELETE' });
+  }, [patchNoteEverywhere]);
+
+  const fetchNoteShares = useCallback(async (noteId: string): Promise<NoteShare[]> => {
+    const res = await fetch(`/api/notes/${noteId}/shares`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.shares ?? [];
+  }, []);
+
+  const shareNote = useCallback(async (
+    noteId: string,
+    email: string,
+    role: 'viewer' | 'editor'
+  ): Promise<{ share: NoteShare } | { error: string }> => {
+    const res = await fetch(`/api/notes/${noteId}/shares`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, role }),
+    });
+    const data = await res.json();
+    if (!res.ok) return { error: data.error ?? 'Failed to share note' };
+
+    patchNoteEverywhere(noteId, n => ({ ...n, share_count: (n.share_count ?? 0) + 1 }));
+    return { share: data.share };
+  }, [patchNoteEverywhere]);
+
+  const unshareNote = useCallback(async (noteId: string, userId: string) => {
+    await fetch(`/api/notes/${noteId}/shares/${userId}`, { method: 'DELETE' });
+    patchNoteEverywhere(noteId, n => ({ ...n, share_count: Math.max(0, (n.share_count ?? 1) - 1) }));
+  }, [patchNoteEverywhere]);
+
   return (
     <NotesContext.Provider value={{
-      notes, archivedNotes, labels, isLoading, searchResults, searchQuery,
+      notes, archivedNotes, sharedNotes, labels, isLoading, searchResults, searchQuery,
       createNote, updateNote, deleteNote, togglePin, toggleArchive,
       addLabelToNote, removeLabelFromNote, createLabel, deleteLabel,
       search, clearSearch, refreshNotes,
+      addChecklistItem, updateChecklistItem, deleteChecklistItem,
+      fetchNoteShares, shareNote, unshareNote,
     }}>
       {children}
     </NotesContext.Provider>
